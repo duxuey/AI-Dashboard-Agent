@@ -33,10 +33,12 @@ DASHBOARD_SOURCE = "dashboard"
 
 # 内置注册表。为什么内置而不只靠 .env：dashboard 必然存在（看板总在跑自己的
 # 任务），要求运维记得写进 .env 只会让默认状态下列表里冒出一个没名字的来源。
-# canvas 是当前唯一的外部接入方，一并内置，开箱就有中文名。
+# canvas / canvas-core 是仅有的两个外部接入方，一并内置，开箱就有中文名。
+# 两者是并行的设计器，上报同一套事件，只能靠 source 区分。
 DEFAULT_SYSTEMS = {
     DASHBOARD_SOURCE: "AI-Dashboard-Agent",
     "canvas": "Canvas 设计器",
+    "canvas-core": "Canvas Core 设计器",
 }
 
 
