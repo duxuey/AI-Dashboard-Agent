@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Dashboard-Agent · 运行记录</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">🤖</span>
+      AI-Dashboard-Agent
+    </div>
+    <div class="controls"></div>
+  </header>
+
+  <nav class="menu-bar">
+    <a class="menu-item active" href="/">📋 运行记录</a>
+    <a class="menu-item" href="/stats">📊 统计</a>
+    <a class="menu-item" href="/settings">⚙️ 设置</a>
+  </nav>
+
+  <main class="list-main">
+    <!-- 查询区与列表区同属一张卡片，视觉上是一个整体 -->
+    <div class="list-panel">
+      <!-- 查询工具栏：第一行全部查询条件，第二行操作按钮。
+           每个 .filter-item 是一个"标签 + 控件"的条件组，
+           条件组之间由 .toolbar-row 的 gap 统一拉开等距 -->
+      <div class="toolbar">
+        <div class="toolbar-row filters">
+          <div class="filter-item">
+            <label class="toolbar-label" for="search-input">任务关键词</label>
+            <div class="search-wrap">
+              <input id="search-input" type="text" placeholder="输入关键词...">
+              <button id="search-clear" class="input-clear hidden" type="button" title="清空关键词">✕</button>
+            </div>
+          </div>
+          <!-- 下拉用 div 自绘：原生 select 的弹出层由系统绘制，CSS 改不动 -->
+          <div class="filter-item">
+            <span class="toolbar-label" id="status-label">状态</span>
+            <div class="dropdown" id="status-filter" data-value="" title="按状态筛选">
+              <button type="button" class="dropdown-toggle" aria-haspopup="listbox"
+                      aria-expanded="false" aria-labelledby="status-label">
+                <span class="dropdown-text"></span>
+                <span class="dropdown-arrow"></span>
+              </button>
+              <div class="dropdown-menu" role="listbox" aria-labelledby="status-label"></div>
+            </div>
+          </div>
+          <div class="filter-item">
+            <span class="toolbar-label" id="model-label">模型</span>
+            <div class="dropdown" id="model-filter" data-value="" title="按模型筛选">
+              <button type="button" class="dropdown-toggle" aria-haspopup="listbox"
+                      aria-expanded="false" aria-labelledby="model-label">
+                <span class="dropdown-text"></span>
+                <span class="dropdown-arrow"></span>
+              </button>
+              <div class="dropdown-menu" role="listbox" aria-labelledby="model-label"></div>
+            </div>
+          </div>
+          <div class="filter-item">
+            <span class="toolbar-label" id="source-label">系统</span>
+            <div class="dropdown" id="source-filter" data-value="" title="按来源系统筛选">
+              <button type="button" class="dropdown-toggle" aria-haspopup="listbox"
+                      aria-expanded="false" aria-labelledby="source-label">
+                <span class="dropdown-text"></span>
+                <span class="dropdown-arrow"></span>
+              </button>
+              <div class="dropdown-menu" role="listbox" aria-labelledby="source-label"></div>
+            </div>
+          </div>
+          <div class="filter-item">
+            <label class="toolbar-label" for="date-from">开始时间</label>
+            <input id="date-from" type="date" title="起始日期（含当天）">
+            <span class="range-sep">~</span>
+            <input id="date-to" type="date" title="结束日期（含当天）" aria-label="结束时间">
+          </div>
+        </div>
+        <div class="toolbar-row">
+          <button id="query-btn" class="primary" title="执行查询">🔍 查询</button>
+          <button id="clear-btn" class="secondary" title="清空全部查询条件">🧹 清空</button>
+          <button id="refresh-btn" class="secondary" title="重新加载运行记录">🔄 刷新</button>
+          <button id="new-run-btn" class="primary" title="新建一个任务">➕ 新建任务</button>
+        </div>
+      </div>
+
+      <div class="list-card">
+        <!-- 唯一的滚动容器：只有表格区域滚，上方查询区和下方分页栏都固定 -->
+        <div class="table-scroll">
+          <table class="run-table cols-list">
+            <thead>
+              <tr>
+                <th class="col-task">任务</th>
+                <th class="col-system">系统</th>
+                <th class="col-model">模型</th>
+                <th class="col-status">状态</th>
+                <th class="col-time sortable" id="sort-time" title="点击切换排序">开始时间 <span id="sort-arrow">▼</span></th>
+                <th class="col-tokens">TOKENS</th>
+                <th class="col-actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="run-tbody"></tbody>
+          </table>
+          <div id="list-empty" class="empty-hint" style="display:none">暂无运行记录</div>
+        </div>
+
+        <!-- 分页底栏。列表为空时整条隐藏，不显示"共 0 条"这种废话 -->
+        <div class="list-footer hidden" id="list-footer">
+          <span class="list-count" id="list-count"></span>
+          <div class="list-pager">
+            <div class="filter-item">
+              <span class="toolbar-label">每页</span>
+              <div class="dropdown compact" id="page-size" data-value="10" title="每页显示条数">
+                <button type="button" class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown-text"></span>
+                  <span class="dropdown-arrow"></span>
+                </button>
+                <div class="dropdown-menu" role="listbox"></div>
+              </div>
+            </div>
+            <button id="page-prev" type="button" title="上一页">‹ 上一页</button>
+            <span class="pager-info" id="page-info"></span>
+            <button id="page-next" type="button" title="下一页">下一页 ›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="status-bar">就绪</div>
+
+  <!-- 新建任务弹框 -->
+  <div id="new-run-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">✨ 新建任务</div>
+      <div class="modal-body">
+        <textarea id="new-run-input" placeholder="输入任务内容，例如：计算 (34*12+8)/7 并告诉我当前时间"></textarea>
+        <div class="modal-hint">创建后会自动跳转到详情页，实时查看调用路径</div>
+      </div>
+      <div class="modal-actions">
+        <button id="modal-cancel">取消</button>
+        <button id="modal-confirm" class="primary">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/systems.js"></script>
+  <script src="/static/list.js"></script>
+</body>
+</html>

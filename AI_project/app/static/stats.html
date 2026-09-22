@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Dashboard-Agent · 统计</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">🤖</span>
+      AI-Dashboard-Agent
+    </div>
+    <div class="controls"></div>
+  </header>
+
+  <nav class="menu-bar">
+    <a class="menu-item" href="/">📋 运行记录</a>
+    <a class="menu-item active" href="/stats">📊 统计</a>
+    <a class="menu-item" href="/settings">⚙️ 设置</a>
+  </nav>
+
+  <main class="stats-main">
+    <!-- 顶部指标卡片 -->
+    <div class="stat-grid" id="stat-cards"></div>
+
+    <!-- 中部：分布 + 耗时 -->
+    <div class="stats-row">
+      <section class="stats-card">
+        <div class="stats-card-title">🟢 状态分布</div>
+        <div id="status-chart" class="bar-chart"></div>
+      </section>
+      <section class="stats-card">
+        <div class="stats-card-title">🧠 模型分布</div>
+        <div id="model-chart" class="bar-chart"></div>
+      </section>
+      <section class="stats-card">
+        <div class="stats-card-title">🖥️ 系统分布</div>
+        <div id="source-chart" class="bar-chart"></div>
+      </section>
+    </div>
+
+    <!-- 底部：最近运行 -->
+    <section class="stats-card">
+      <div class="stats-card-title">🕘 最近运行</div>
+      <table class="run-table cols-recent">
+        <thead>
+          <tr>
+            <th class="col-task">任务</th>
+            <th class="col-system">系统</th>
+            <th class="col-model">模型</th>
+            <th class="col-status">状态</th>
+            <th class="col-time">开始时间</th>
+            <th class="col-tokens">tokens</th>
+          </tr>
+        </thead>
+        <tbody id="recent-tbody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <div id="status-bar">就绪</div>
+
+  <script src="/static/systems.js"></script>
+  <script src="/static/stats.js"></script>
+</body>
+</html>

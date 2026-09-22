@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Dashboard-Agent · 详情</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">🤖</span>
+      AI-Dashboard-Agent
+    </div>
+    <div class="controls">
+      <button id="back-btn" title="返回运行记录列表">← 返回列表</button>
+      <button id="delete-btn" class="danger" title="删除当前运行记录">🗑 删除</button>
+    </div>
+  </header>
+
+  <nav class="menu-bar">
+    <a class="menu-item" href="/">📋 运行记录</a>
+    <a class="menu-item" href="/stats">📊 统计</a>
+    <a class="menu-item" href="/settings">⚙️ 设置</a>
+  </nav>
+
+  <main class="layout">
+    <!-- 左：调用路径树 -->
+    <section class="panel" id="trace-panel">
+      <div class="panel-title"><span class="pt-icon">🧭</span> 调用路径</div>
+      <div id="trace-tree" class="scroll"></div>
+    </section>
+
+    <div class="col-divider" title="拖动调整宽度"></div>
+
+    <!-- 中：上下文 -->
+    <section class="panel" id="context-panel">
+      <div class="panel-title"><span class="pt-icon">🔍</span> 上下文 <span style="color:var(--muted);font-weight:400;font-size:13px">（点击左侧节点）</span></div>
+      <div id="context-view" class="scroll"></div>
+    </section>
+
+    <div class="col-divider" title="拖动调整宽度"></div>
+
+    <!-- 右：日志流 -->
+    <section class="panel" id="log-panel">
+      <div class="panel-title"><span class="pt-icon">📜</span> 日志</div>
+      <div id="log-stream" class="scroll"></div>
+    </section>
+  </main>
+
+  <!-- 待审批提示条。不能放进 #status-bar —— 那个元素每秒都被 updateStatusBar() 覆写 -->
+  <div id="approval-bar" class="approval-bar hidden"></div>
+
+  <div id="status-bar">就绪</div>
+
+  <script src="/static/systems.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

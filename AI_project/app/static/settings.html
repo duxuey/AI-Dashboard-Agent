@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Dashboard-Agent · 设置</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">🤖</span>
+      AI-Dashboard-Agent
+    </div>
+    <div class="controls"></div>
+  </header>
+
+  <nav class="menu-bar">
+    <a class="menu-item" href="/">📋 运行记录</a>
+    <a class="menu-item" href="/stats">📊 统计</a>
+    <a class="menu-item active" href="/settings">⚙️ 设置</a>
+  </nav>
+
+  <main class="settings-main">
+    <!-- 上半区：左「关于」/ 右「当前配置」并排 -->
+    <div class="settings-row">
+      <section class="stats-card">
+        <div class="stats-card-title">ℹ️ 关于</div>
+        <div class="about-body">
+          <p><strong>AI-Dashboard-Agent</strong> —— 可视化查看 AI agent 的调用路径、日志与上下文。</p>
+          <ul>
+            <li>技术栈：Python · FastAPI · DeepSeek (OpenAI 兼容)</li>
+            <li>数据来源：本看板自建任务 + Canvas 设计器 AI 助手埋点上报</li>
+            <li>历史记录落盘于 <code>traces/</code> 目录，重启后仍可查看</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stats-card">
+        <div class="stats-card-title">🛠️ 当前配置</div>
+        <div id="config-table" class="config-list"></div>
+      </section>
+    </div>
+
+    <!-- 下半区：修改配置说明，整行展开 -->
+    <section class="stats-card">
+      <div class="stats-card-title">💡 修改配置说明</div>
+      <div class="about-body">
+        <p>模型、API 地址、监听端口等配置项存储在项目根目录的 <code>.env</code> 文件中。修改后需重启服务生效。</p>
+        <!-- 整行铺满，列表分两列以免右侧大片留白 -->
+        <ul class="cols-2">
+          <li><code>DEEPSEEK_MODEL</code> — 使用的模型（如 deepseek-v4-flash）</li>
+          <li><code>DEEPSEEK_BASE_URL</code> — API 地址</li>
+          <li><code>DEEPSEEK_API_KEY</code> — API 密钥</li>
+          <li><code>HOST</code> / <code>PORT</code> — 监听地址与端口</li>
+          <li><code>SYSTEMS</code> — 接入的系统注册表（<code>key:显示名</code>，逗号分隔）</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div id="status-bar">就绪</div>
+
+  <script src="/static/systems.js"></script>
+  <script src="/static/settings.js"></script>
+</body>
+</html>
